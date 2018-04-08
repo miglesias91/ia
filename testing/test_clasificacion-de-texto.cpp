@@ -6,6 +6,7 @@
 #include <utiles/include/FuncionesString.h>
 
 // clasificacion-de-texto
+#include <clasificacion-de-texto/include/Clasificador.h>
 #include <clasificacion-de-texto/include/Vocabulario.h>
 
 TEST(clasificacion_de_texto, DISABLED_generar_vocabulario)
@@ -58,7 +59,7 @@ TEST(clasificacion_de_texto, DISABLED_textos_2_bolsas_de_palabras)
     herramientas::utiles::FuncionesSistemaArchivos::escribir("bolsas_de_palabras_con_polaridad.txt", contenido_a_escribir);
 }
 
-TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
+TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 {
     std::string bolsas_de_palabras = "";
 
@@ -99,4 +100,13 @@ TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
     }
 
     herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset.csv", contenido_vectores);
+}
+
+TEST(clasificacion_de_texto, clasificar_dataset)
+{
+    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_TEST.csv");
+
+    ia::clasificacion::Clasificador clasificador(dataset);
+
+
 }
