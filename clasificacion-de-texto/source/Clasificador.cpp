@@ -18,65 +18,36 @@ Clasificador::~Clasificador()
 {
 }
 
-//bool Clasificador::cargarDataSet(const std::string & path_dataset)
-//{
-//    {
-//        std::vector<std::string> registros;
-//        {
-//            std::string string_dataset = "";
-//            herramientas::utiles::FuncionesSistemaArchivos::leer(path_dataset, string_dataset);
-//
-//            registros = herramientas::utiles::FuncionesString::separar(string_dataset, "\n");
-//        }
-//
-//        std::vector<std::string> columnas;
-//        for (const auto & registro : registros)
-//        {
-//            columnas = herramientas::utiles::FuncionesString::separar(registro, ",");
-//
-//            data una_data;
-//            for (std::vector<std::string>::iterator it = columnas.begin(); it != (columnas.end() - 1); it++)
-//            {
-//                una_data.valores.push_back(std::stof(*it));
-//            }
-//            una_data.clase = this->getIDClase(*(columnas.end() - 1));
-//
-//            this->dataset.push_back(una_data);
-//        }
-//    }
-//
-//    return true;
-//}
-
 bool Clasificador::entrenar()
 {
     tiny_dnn::adagrad opt;
+    opt.alpha = 0.01;
 
-    size_t tamanio_batch = 1;
-    size_t numero_de_ciclos = 30;
+    size_t tamanio_batch = 50;
+    size_t numero_de_ciclos = 100;
 
-    bool resultado = this->red_neuronal.train<tiny_dnn::mse>(opt, *this->dataset->getValoresDeEntradaEntrenamiento(), *this->dataset->getSalidaDeseadaEntrenamiento(), tamanio_batch, numero_de_ciclos);
+    std::vector<tiny_dnn::vec_t> entrada_entrenamiento;
+    this->dataset->getValoresDeEntradaEntrenamiento(&entrada_entrenamiento);
+
+    std::vector<tiny_dnn::label_t> salida_deseada_entrenamiento;
+    this->dataset->getSalidaDeseadaEntrenamiento(&salida_deseada_entrenamiento);
+
+    bool resultado = this->red_neuronal.train<tiny_dnn::mse>(opt, entrada_entrenamiento, salida_deseada_entrenamiento, tamanio_batch, numero_de_ciclos);
 
     return resultado;
 }
 
 void Clasificador::evaluar()
 {
+    std::vector<tiny_dnn::vec_t> entrada_evaluacion;
+    this->dataset->getValoresDeEntradaEvaluacion(&entrada_evaluacion);
 
+    std::vector<tiny_dnn::label_t> salida_deseada_evaluacion;
+    this->dataset->getSalidaDeseadaEvaluacion(&salida_deseada_evaluacion);
+
+    tiny_dnn::result resultado = this->red_neuronal.test(entrada_evaluacion, salida_deseada_evaluacion);
+    resultado.print_detail(std::cout);
 }
-
-//tiny_dnn::label_t Clasificador::getIDClase(std::string nombre_clase)
-//{
-//    const auto & iterador_mapa = this->mapa_clase_id.find(nombre_clase);
-//
-//    if (this->mapa_clase_id.end() == iterador_mapa)
-//    {
-//        this->mapa_clase_id[nombre_clase] = this->contador_ids;
-//        this->contador_ids++;
-//    }
-//
-//    return this->mapa_clase_id[nombre_clase];
-//}
 
 // GETTERS
 

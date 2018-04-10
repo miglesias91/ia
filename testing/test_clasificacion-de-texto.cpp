@@ -104,9 +104,13 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
 TEST(clasificacion_de_texto, clasificar_dataset)
 {
-    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_TEST.csv");
+    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
+
+    //dataset.preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
 
     ia::clasificacion::Clasificador clasificador(dataset);
 
+    clasificador.entrenar();
 
+    clasificador.evaluar();
 }

@@ -6,14 +6,27 @@ Dataset::Dataset() : contador_ids(0)
 {
 }
 
-Dataset::Dataset(std::vector<tiny_dnn::vec_t> valores_de_entrada, std::vector<tiny_dnn::label_t> salida_deseada) : 
-    valores_de_entrada(valores_de_entrada), salida_deseada(salida_deseada)
+Dataset::Dataset(std::vector<tiny_dnn::vec_t> valores_de_entrada, std::vector<tiny_dnn::label_t> salida_deseada, float porcentaje_de_entrenamiento) :
+    contador_ids(0), porcentaje_de_entrenamiento(porcentaje_de_entrenamiento)
 {
+    for (unsigned int i = 0; i < valores_de_entrada.size(); i++)
+    {
+        data nueva_data{ valores_de_entrada[i], salida_deseada[i] };
+
+        if(i < valores_de_entrada.size() * porcentaje_de_entrenamiento)
+        {
+            this->set_entrenamiento.push_back(nueva_data);
+        }
+        else
+        {
+            this->set_evaluacion.push_back(nueva_data);
+        }
+    }
 }
 
-Dataset::Dataset(const std::string & path_dataset) : contador_ids(0)
+Dataset::Dataset(const std::string & path_dataset, float porcentaje_de_entrenamiento) : contador_ids(0), porcentaje_de_entrenamiento(porcentaje_de_entrenamiento)
 {
-    this->cargar(path_dataset);
+    this->cargar(path_dataset, porcentaje_de_entrenamiento);
 }
 
 Dataset::~Dataset()
@@ -24,12 +37,12 @@ Dataset::~Dataset()
 
 unsigned long int Dataset::getTamanio()
 {
-    return this->valores_de_entrada_entrenamiento.size() + this->valores_de_entrada_evaluacion.size();
+    return this->set_entrenamiento.size() + this->set_evaluacion.size();
 }
 
 unsigned long int Dataset::getTamanioValores()
 {
-    return this->valores_de_entrada_entrenamiento.front().size();
+    return this->set_entrenamiento.front().valores.size();
 }
 
 unsigned long int Dataset::getTamanioClases()
@@ -37,24 +50,44 @@ unsigned long int Dataset::getTamanioClases()
     return this->contador_ids;
 }
 
-std::vector<tiny_dnn::vec_t> * Dataset::getValoresDeEntradaEntrenamiento()
+unsigned long int Dataset::getValoresDeEntradaEntrenamiento(std::vector<tiny_dnn::vec_t> * valores_de_entrada_entrenamiento)
 {
-    return &this->valores_de_entrada_entrenamiento;
+    for (auto data : this->set_entrenamiento)
+    {
+        valores_de_entrada_entrenamiento->push_back(data.valores);
+    }
+
+    return valores_de_entrada_entrenamiento->size();
 }
 
-std::vector<tiny_dnn::label_t> * Dataset::getSalidaDeseadaEntrenamiento()
+unsigned long int Dataset::getSalidaDeseadaEntrenamiento(std::vector<tiny_dnn::label_t> * salida_deseada_entrenamiento)
 {
-    return &this->salida_deseada_entrenamiento;
+    for (auto data : this->set_entrenamiento)
+    {
+        salida_deseada_entrenamiento->push_back(data.clase);
+    }
+
+    return salida_deseada_entrenamiento->size();
 }
 
-std::vector<tiny_dnn::vec_t> * Dataset::getValoresDeEntradaEvaluacion()
+unsigned long int Dataset::getValoresDeEntradaEvaluacion(std::vector<tiny_dnn::vec_t> * valores_de_entrada_evaluacion)
 {
-    return &this->valores_de_entrada_evaluacion;
+    for (auto data : this->set_evaluacion)
+    {
+        valores_de_entrada_evaluacion->push_back(data.valores);
+    }
+
+    return valores_de_entrada_evaluacion->size();
 }
 
-std::vector<tiny_dnn::label_t> * Dataset::getSalidaDeseadaEvaluacion()
+unsigned long int Dataset::getSalidaDeseadaEvaluacion(std::vector<tiny_dnn::label_t> * salida_deseada_evaluacion)
 {
-    return &this->salida_deseada_evaluacion;
+    for (auto data : this->set_evaluacion)
+    {
+        salida_deseada_evaluacion->push_back(data.clase);
+    }
+
+    return salida_deseada_evaluacion->size();
 }
 
 // SETTERS
@@ -84,17 +117,24 @@ bool Dataset::cargar(const std::string & path_dataset, float porcentaje_de_entre
                valor.push_back(std::stof(*it));
             }
 
-            if (this->valores_de_entrada_entrenamiento.size() > porcentaje_de_entrenamiento * registros.size())
+            if (this->set_entrenamiento.size() < porcentaje_de_entrenamiento * registros.size())
             {
-
+                this->set_entrenamiento.push_back(data{ valor, this->getIDClase(*(columnas.end() - 1)) });
             }
-            this->valores_de_entrada.push_back(valor);
-            this->salida_deseada.push_back(this->getIDClase(*(columnas.end() - 1)));
-
+            else
+            {
+                this->set_evaluacion.push_back(data{ valor, this->getIDClase(*(columnas.end() - 1)) });
+            }
         }
     }
 
     return true;
+}
+
+void Dataset::mezclar()
+{
+    std::random_shuffle(this->set_entrenamiento.begin(), this->set_entrenamiento.end());
+    std::random_shuffle(this->set_evaluacion.begin(), this->set_evaluacion.end());
 }
 
 // CONSULTAS

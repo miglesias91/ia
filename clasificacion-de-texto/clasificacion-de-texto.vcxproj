@@ -135,7 +135,9 @@
     <ClCompile Include="source\Clasificador.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="source\Dataset.cpp" />
+    <ClCompile Include="source\Dataset.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="source\Vocabulario.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

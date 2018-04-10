@@ -19,9 +19,15 @@ class Dataset
 {
 public:
 
+    struct data
+    {
+        tiny_dnn::vec_t valores;
+        tiny_dnn::label_t clase;
+    };
+
     Dataset();
-    Dataset(std::vector<tiny_dnn::vec_t> valores_de_entrada, std::vector<tiny_dnn::label_t> salida_deseada);
-    Dataset(const std::string & path_dataset);
+    Dataset(std::vector<tiny_dnn::vec_t> valores_de_entrada, std::vector<tiny_dnn::label_t> salida_deseada, float porcentaje_de_entrenamiento);
+    Dataset(const std::string & path_dataset, float porcentaje_de_entrenamiento = 0.66f);
     virtual ~Dataset();
 
     // GETTERS
@@ -30,11 +36,11 @@ public:
     unsigned long int getTamanioValores();
     unsigned long int getTamanioClases();
 
-    std::vector<tiny_dnn::vec_t> * getValoresDeEntradaEntrenamiento();
-    std::vector<tiny_dnn::label_t> * getSalidaDeseadaEntrenamiento();
+    unsigned long int getValoresDeEntradaEntrenamiento(std::vector<tiny_dnn::vec_t> * valores_de_entrada_entrenamiento);
+    unsigned long int getSalidaDeseadaEntrenamiento(std::vector<tiny_dnn::label_t> * salida_deseada_entrenamiento);
 
-    std::vector<tiny_dnn::vec_t> * getValoresDeEntradaEvaluacion();
-    std::vector<tiny_dnn::label_t> * getSalidaDeseadaEvaluacion();
+    unsigned long int getValoresDeEntradaEvaluacion(std::vector<tiny_dnn::vec_t> * valores_de_entrada_evaluacion);
+    unsigned long int getSalidaDeseadaEvaluacion(std::vector<tiny_dnn::label_t> * salida_deseada_evaluacion);
 
     // SETTERS
 
@@ -48,7 +54,11 @@ public:
     // 5: los registros deben estar DESORDENADOS (u ordenados aleatoriamente).
     // 6: los valores de los registros son numeros (todas las columnas excepto la ultima).
     // 7: las clases son strings (la ultima columna de cada registro).
-    bool cargar(const std::string & path_dataset, float porcentaje_de_entrenamiento);
+    bool cargar(const std::string & path_dataset, float porcentaje_de_entrenamiento = 0.66f);
+
+    //void preparar();
+
+    void mezclar();
 
     // CONSULTAS
 
@@ -63,11 +73,15 @@ private:
     tiny_dnn::label_t contador_ids;
     std::unordered_map<std::string, tiny_dnn::label_t> mapa_clase_id;
 
-    std::vector<tiny_dnn::vec_t> valores_de_entrada_entrenamiento;
-    std::vector<tiny_dnn::label_t> salida_deseada_entrenamiento;
+    //std::vector<tiny_dnn::vec_t> valores_de_entrada_entrenamiento;
+    //std::vector<tiny_dnn::label_t> salida_deseada_entrenamiento;
 
-    std::vector<tiny_dnn::vec_t> valores_de_entrada_evaluacion;
-    std::vector<tiny_dnn::label_t> salida_deseada_evaluacion;
+    //std::vector<tiny_dnn::vec_t> valores_de_entrada_evaluacion;
+    //std::vector<tiny_dnn::label_t> salida_deseada_evaluacion;
+    
+    std::vector<data> set_entrenamiento;
+
+    std::vector<data> set_evaluacion;
 
     float porcentaje_de_entrenamiento;
 };
