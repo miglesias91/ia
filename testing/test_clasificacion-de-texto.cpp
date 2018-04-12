@@ -52,14 +52,17 @@ TEST(clasificacion_de_texto, DISABLED_textos_2_bolsas_de_palabras)
 
         contenido_a_escribir += herramientas::utiles::FuncionesString::unir(bolsa_de_palabras, " ") + "," + polaridad + "\n";
 
-        std::cout << "registro analizado: " << i << std::endl;
+        if(0 == i % 1000)
+        {
+            std::cout << "registro analizado: " << i << std::endl;
+        }
         i++;
     }
 
     herramientas::utiles::FuncionesSistemaArchivos::escribir("bolsas_de_palabras_con_polaridad.txt", contenido_a_escribir);
 }
 
-TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
+TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
 {
     std::string bolsas_de_palabras = "";
 
@@ -68,7 +71,7 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
     std::vector<std::string> bolsas_de_palabras_con_polaridad = herramientas::utiles::FuncionesString::separar(bolsas_de_palabras, "\n");
 
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar("vocabulario_curado.txt");
+    vocabulario.importar("vocabulario_curado_3k.txt");
 
     std::vector<std::pair<std::vector<unsigned int>, std::string>> vectores;
     unsigned int i = 0;
@@ -80,10 +83,16 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
         std::vector<unsigned int> vector_bolsa_de_palabra;
 
-        vocabulario.vectorizar(bolsa_de_palabras, vector_bolsa_de_palabra);
+        if (vocabulario.vectorizar(bolsa_de_palabras, vector_bolsa_de_palabra))
+        {   // si ninguna de las palabras de la bolsa estaba dentro del vocabulario, se devolvio un vector vacio.
+            // entonces no lo agrego.
+            vectores.push_back(std::pair<std::vector<unsigned int>, std::string>(vector_bolsa_de_palabra, polaridad));
+        }
 
-        vectores.push_back(std::pair<std::vector<unsigned int>, std::string>(vector_bolsa_de_palabra, polaridad));
-        std::cout << "bolsa de palabras vectorizada: " << i << std::endl;
+        if (0 == i % 1000)
+        {
+            std::cout << "bolsa de palabras vectorizada: " << i << std::endl;
+        }
         i++;
     }
 
@@ -99,18 +108,18 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
     }
 
-    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset.csv", contenido_vectores);
+    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab3k.csv", contenido_vectores);
 }
 
 TEST(clasificacion_de_texto, clasificar_dataset)
 {
-    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
+    //ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
 
-    //dataset.preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
+    ////dataset.preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
 
-    ia::clasificacion::Clasificador clasificador(dataset);
+    //ia::clasificacion::Clasificador clasificador(dataset);
 
-    clasificador.entrenar();
+    //clasificador.entrenar();
 
-    clasificador.evaluar();
+    //clasificador.evaluar();
 }

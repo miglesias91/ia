@@ -41,7 +41,7 @@ public:
     void generar(const std::vector<std::string> & corpus, const config & configuracion);
 
     // devuelve un vector que representa la frecuencia de cada palabra del vocabulario dentro de la bolsa de palabras.
-    void vectorizar(const std::vector<std::string> & bolsa_de_palabras, std::vector<unsigned int> & vector_conteo);
+    unsigned int vectorizar(const std::vector<std::string> & bolsa_de_palabras, std::vector<unsigned int> & vector_conteo);
 
     // depura el texto y lo devuelve como una bolsa de palabras.
     void depurar(std::string texto_a_depurar, std::vector<std::string> & bolsa_de_palabras);

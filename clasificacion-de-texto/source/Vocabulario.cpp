@@ -86,11 +86,12 @@ void Vocabulario::generar(const std::vector<std::string> & corpus, const config 
     }
 }
 
-void Vocabulario::vectorizar(const std::vector<std::string> & bolsa_de_palabras, std::vector<unsigned int> & vector_conteo)
+unsigned int Vocabulario::vectorizar(const std::vector<std::string> & bolsa_de_palabras, std::vector<unsigned int> & vector_conteo)
 {
     // inicializo el vector con el tamanio del vocabulario.
     vector_conteo = std::vector<unsigned int>(this->vocabulario_palabras.size(), 0);
 
+    unsigned int cantidad_de_matcheos = 0;
     for (std::string palabra : bolsa_de_palabras)
     {
         std::vector<std::string>::iterator it_palabra = std::lower_bound(this->vocabulario_palabras.begin(), this->vocabulario_palabras.end(), palabra);
@@ -100,8 +101,11 @@ void Vocabulario::vectorizar(const std::vector<std::string> & bolsa_de_palabras,
 
             unsigned int conteo = vector_conteo[posicion_palabra_en_vector];
             vector_conteo[posicion_palabra_en_vector] = conteo + 1;
+
+            cantidad_de_matcheos++;
         }
     }
+    return cantidad_de_matcheos;
 }
 
 unsigned int Vocabulario::agregar(const std::string & palabra)
