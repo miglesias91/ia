@@ -19,6 +19,12 @@ class Dataset
 {
 public:
 
+    struct info_clase
+    {
+        unsigned long long int cantidad_de_instancias;
+        tiny_dnn::label_t id_clase;
+    };
+
     struct data
     {
         tiny_dnn::vec_t valores;
@@ -56,7 +62,7 @@ public:
     // 7: las clases son strings (la ultima columna de cada registro).
     bool cargar(const std::string & path_dataset, float porcentaje_de_entrenamiento = 0.66f);
 
-    //void preparar();
+    void preparar();
 
     void mezclar();
 
@@ -71,13 +77,8 @@ private:
     // ATRIBUTOS
 
     tiny_dnn::label_t contador_ids;
-    std::unordered_map<std::string, tiny_dnn::label_t> mapa_clase_id;
-
-    //std::vector<tiny_dnn::vec_t> valores_de_entrada_entrenamiento;
-    //std::vector<tiny_dnn::label_t> salida_deseada_entrenamiento;
-
-    //std::vector<tiny_dnn::vec_t> valores_de_entrada_evaluacion;
-    //std::vector<tiny_dnn::label_t> salida_deseada_evaluacion;
+    //std::unordered_map<std::string, tiny_dnn::label_t> mapa_clase_id;
+    std::unordered_map<std::string, info_clase> mapa_clase_id;
     
     std::vector<data> set_entrenamiento;
 

@@ -62,7 +62,7 @@ TEST(clasificacion_de_texto, DISABLED_textos_2_bolsas_de_palabras)
     herramientas::utiles::FuncionesSistemaArchivos::escribir("bolsas_de_palabras_con_polaridad.txt", contenido_a_escribir);
 }
 
-TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
+TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 {
     std::string bolsas_de_palabras = "";
 
@@ -71,7 +71,7 @@ TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
     std::vector<std::string> bolsas_de_palabras_con_polaridad = herramientas::utiles::FuncionesString::separar(bolsas_de_palabras, "\n");
 
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar("vocabulario_curado_3k.txt");
+    vocabulario.importar("vocabulario_curado_1k.txt");
 
     std::vector<std::pair<std::vector<unsigned int>, std::string>> vectores;
     unsigned int i = 0;
@@ -108,18 +108,19 @@ TEST(clasificacion_de_texto, bolsas_de_palabras_2_vector_vocabulario)
 
     }
 
-    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab3k.csv", contenido_vectores);
+    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab1k.csv", contenido_vectores);
 }
 
 TEST(clasificacion_de_texto, clasificar_dataset)
 {
     //ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
+    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("dataset_vocab1k_reducido_balanceado_mezclado.csv");
 
-    ////dataset.preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
+    dataset->preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
 
-    //ia::clasificacion::Clasificador clasificador(dataset);
+    ia::clasificacion::Clasificador clasificador(dataset);
 
-    //clasificador.entrenar();
+    clasificador.entrenar();
 
-    //clasificador.evaluar();
+    clasificador.evaluar();
 }

@@ -131,6 +131,67 @@ bool Dataset::cargar(const std::string & path_dataset, float porcentaje_de_entre
     return true;
 }
 
+void Dataset::preparar()
+{
+    std::unordered_map<tiny_dnn::label_t, std::vector<data>> mapa_vector_de_clases;
+
+    // obtengo la clase que menos tiene.
+    info_clase info_clase_con_menos_instancias = this->mapa_clase_id.begin()->second;
+    for (auto & info_clase : this->mapa_clase_id)
+    {
+        if (info_clase_con_menos_instancias.cantidad_de_instancias > info_clase.second.cantidad_de_instancias)
+        {
+            info_clase_con_menos_instancias = info_clase.second;
+        }
+
+        mapa_vector_de_clases[info_clase.second.id_clase] = std::vector<data>();
+    }
+
+    // agrupo las clases en vectores.
+    for (auto & data : this->set_entrenamiento)
+    {
+        (&mapa_vector_de_clases[data.clase])->push_back(data);
+    }
+    for (auto & data : this->set_evaluacion)
+    {
+        (&mapa_vector_de_clases[data.clase])->push_back(data);
+    }
+
+    // igualo la cantidad de isntancias por clase.
+    for (auto & clase : mapa_vector_de_clases)
+    {
+        if (clase.first == info_clase_con_menos_instancias.id_clase)
+        {
+            continue;
+        }
+
+        std::vector<data> * instancias = &clase.second;
+        instancias->erase(instancias->begin() + info_clase_con_menos_instancias.cantidad_de_instancias, instancias->end());
+    }
+
+    // vuelvo a guardar las clases en los set de entrenamiento y de evaluacion.
+    this->set_entrenamiento.clear();
+    this->set_evaluacion.clear();
+
+    for (unsigned long long int i = 0; i < info_clase_con_menos_instancias.cantidad_de_instancias; i++)
+    {
+        if (i < porcentaje_de_entrenamiento * info_clase_con_menos_instancias.cantidad_de_instancias)
+        {
+            for (auto & clase : mapa_vector_de_clases)
+            {
+                this->set_entrenamiento.push_back(clase.second[i]);
+            }
+        }
+        else
+        {
+            for (auto & clase : mapa_vector_de_clases)
+            {
+                this->set_evaluacion.push_back(clase.second[i]);
+            }
+        }
+    }
+}
+
 void Dataset::mezclar()
 {
     std::random_shuffle(this->set_entrenamiento.begin(), this->set_entrenamiento.end());
@@ -147,9 +208,11 @@ tiny_dnn::label_t Dataset::getIDClase(std::string nombre_clase)
 
     if (this->mapa_clase_id.end() == iterador_mapa)
     {
-        this->mapa_clase_id[nombre_clase] = this->contador_ids;
+        this->mapa_clase_id[nombre_clase] = info_clase{ 0, this->contador_ids };
         this->contador_ids++;
     }
 
-    return this->mapa_clase_id[nombre_clase];
+    (&this->mapa_clase_id[nombre_clase])->cantidad_de_instancias++;
+
+    return this->mapa_clase_id[nombre_clase].id_clase;
 }
