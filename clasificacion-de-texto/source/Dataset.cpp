@@ -1,5 +1,7 @@
 #include <clasificacion-de-texto/include/Dataset.h>
 
+#include <algorithm>
+
 using namespace ia::clasificacion;
 
 Dataset::Dataset() : contador_ids(0)
@@ -194,8 +196,8 @@ void Dataset::preparar()
 
 void Dataset::mezclar()
 {
-    std::random_shuffle(this->set_entrenamiento.begin(), this->set_entrenamiento.end());
-    std::random_shuffle(this->set_evaluacion.begin(), this->set_evaluacion.end());
+    //std::random_shuffle(this->set_entrenamiento.begin(), this->set_entrenamiento.end());
+    //std::random_shuffle(this->set_evaluacion.begin(), this->set_evaluacion.end());
 }
 
 // CONSULTAS

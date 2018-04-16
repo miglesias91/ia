@@ -1,3 +1,6 @@
+
+#define GTEST_LANG_CXX11 1
+
 // gtest
 #include <gtest/gtest.h>
 
@@ -113,14 +116,26 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
 TEST(clasificacion_de_texto, clasificar_dataset)
 {
+    std::string path_dataset = "dataset_vocab1k_reducido_balanceado_mezclado.csv";
+
+    std::cout << "cargando " + path_dataset + "." << std::endl;
+
     //ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
-    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("dataset_vocab1k_reducido_balanceado_mezclado.csv");
+    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset(path_dataset);
+
+    std::cout << "termino carga." << std::endl;
 
     dataset->preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
+
+    std::cout << "termino preparacion." << std::endl;
 
     ia::clasificacion::Clasificador clasificador(dataset);
 
     clasificador.entrenar();
 
+    std::cout << "termino entrenamiento." << std::endl;
+
     clasificador.evaluar();
+
+    std::cout << "termino evaluacion." << std::endl;
 }

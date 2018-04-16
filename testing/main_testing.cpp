@@ -1,4 +1,6 @@
 
+#define GTEST_LANG_CXX11 1
+
 // gtest
 #include <gtest/gtest.h>
 
