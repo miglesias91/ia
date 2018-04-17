@@ -31,6 +31,17 @@ public:
 
     struct config_entrenamiento
     {
+        config_entrenamiento(std::string path)
+        {
+            std::string contenido;
+            herramientas::utiles::FuncionesSistemaArchivos::leer(path, contenido);
+            std::vector<std::string> valores = herramientas::utiles::FuncionesString::separar(contenido, ",");
+
+            this->tasa_de_aprendizaje = std::stof(valores[0]);
+            this->tamanio_batch = std::stoul(valores[1]);
+            this->numero_de_ciclos = std::stoul(valores[2]);
+        }
+
         std::string optimizador;
         float tasa_de_aprendizaje;
         unsigned long int tamanio_batch;
@@ -46,7 +57,7 @@ public:
 
     // METODOS
 
-    bool entrenar();
+    bool entrenar(config_entrenamiento configuracion);
 
     void evaluar();
 

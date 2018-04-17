@@ -116,7 +116,13 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
 TEST(clasificacion_de_texto, clasificar_dataset)
 {
-    std::string path_dataset = "dataset_vocab1k_reducido_balanceado_mezclado.csv";
+    std::string contenido;
+    herramientas::utiles::FuncionesSistemaArchivos::leer("config_test.txt", contenido);
+
+    std::vector<std::string> config_test = herramientas::utiles::FuncionesString::separar(contenido, "\n");
+
+    //std::string path_dataset = "dataset_vocab1k_reducido_balanceado_mezclado.csv";
+    std::string path_dataset = config_test[0];
 
     std::cout << "cargando " + path_dataset + "." << std::endl;
 
@@ -129,9 +135,10 @@ TEST(clasificacion_de_texto, clasificar_dataset)
 
     std::cout << "termino preparacion." << std::endl;
 
+    ia::clasificacion::Clasificador::config_entrenamiento config(config_test[1]);
     ia::clasificacion::Clasificador clasificador(dataset);
 
-    clasificador.entrenar();
+    clasificador.entrenar(config);
 
     std::cout << "termino entrenamiento." << std::endl;
 
