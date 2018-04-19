@@ -37,13 +37,15 @@ public:
             herramientas::utiles::FuncionesSistemaArchivos::leer(path, contenido);
             std::vector<std::string> valores = herramientas::utiles::FuncionesString::separar(contenido, ",");
 
-            this->tasa_de_aprendizaje = std::stof(valores[0]);
+            this->optimizador = valores[0];
             this->tamanio_batch = std::stoul(valores[1]);
             this->numero_de_ciclos = std::stoul(valores[2]);
         }
 
+        std::string funcion_loss;
         std::string optimizador;
         float tasa_de_aprendizaje;
+        float termino_decay;
         unsigned long int tamanio_batch;
         unsigned long int numero_de_ciclos;
     };
@@ -67,6 +69,8 @@ private:
 
     // METODOS PRIVADOS
 
+    tiny_dnn::optimizer * crearOptimizador(const config_entrenamiento & configuracion);
+
     // ATRIBUTOS
 
     tiny_dnn::network<tiny_dnn::sequential> red_neuronal;
@@ -75,13 +79,6 @@ private:
 
     Dataset * dataset;
 };
-
-//template <typename tipo_de_dato>
-//bool Clasificador::cargarDataSet(const std::string & path_dataset)
-//{
-//    
-//
-//}
 
 };
 };

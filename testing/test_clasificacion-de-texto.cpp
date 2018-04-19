@@ -69,12 +69,12 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 {
     std::string bolsas_de_palabras = "";
 
-    herramientas::utiles::FuncionesSistemaArchivos::leer("bolsas_de_palabras_con_polaridad_curado.txt", bolsas_de_palabras);
+    herramientas::utiles::FuncionesSistemaArchivos::leer("bolsas_de_palabras_2clases_curado.txt", bolsas_de_palabras);
     
     std::vector<std::string> bolsas_de_palabras_con_polaridad = herramientas::utiles::FuncionesString::separar(bolsas_de_palabras, "\n");
 
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar("vocabulario_curado_1k.txt");
+    vocabulario.importar("vocabulario_curado_3k.txt");
 
     std::vector<std::pair<std::vector<unsigned int>, std::string>> vectores;
     unsigned int i = 0;
@@ -111,7 +111,7 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
     }
 
-    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab1k.csv", contenido_vectores);
+    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab3k_2clases.csv", contenido_vectores);
 }
 
 TEST(clasificacion_de_texto, clasificar_dataset)
