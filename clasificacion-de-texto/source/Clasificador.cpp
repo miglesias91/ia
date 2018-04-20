@@ -100,7 +100,16 @@ void Clasificador::predecir(const std::vector<float>& valores, std::string & cla
 
     std::for_each(valores.begin(), valores.end(), [&valores_tinydnn](float valor) { valores_tinydnn.push_back(valor); });
 
-    tiny_dnn::label_t etiqueta = this->red_neuronal.predict_label(valores_tinydnn);
+    tiny_dnn::label_t etiqueta;
+    try
+    {
+        etiqueta = this->red_neuronal.predict_label(valores_tinydnn);
+    }
+    catch (const tiny_dnn::nn_error & e)
+    {
+        std::cout << e.what();
+    }
+    clase = this->mapeo_id_clase[etiqueta];
 }
 
 

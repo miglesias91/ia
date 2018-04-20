@@ -33,7 +33,7 @@ TEST(clasificacion_de_texto, DISABLED_textos_2_bolsas_de_palabras)
 {
     std::string contenido = "";
 
-    herramientas::utiles::FuncionesSistemaArchivos::leer("tweets_curados_con_polaridad.txt", contenido);
+    herramientas::utiles::FuncionesSistemaArchivos::leer("tweets_curados_2clases.txt", contenido);
 
     std::vector<std::string> corpus_con_polaridad = herramientas::utiles::FuncionesString::separar(contenido, "\n");
 
@@ -62,19 +62,19 @@ TEST(clasificacion_de_texto, DISABLED_textos_2_bolsas_de_palabras)
         i++;
     }
 
-    herramientas::utiles::FuncionesSistemaArchivos::escribir("bolsas_de_palabras_con_polaridad.txt", contenido_a_escribir);
+    herramientas::utiles::FuncionesSistemaArchivos::escribir("bolsas_de_palabras_2clases.txt", contenido_a_escribir);
 }
 
 TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 {
     std::string bolsas_de_palabras = "";
 
-    herramientas::utiles::FuncionesSistemaArchivos::leer("bolsas_de_palabras_2clases_curado.txt", bolsas_de_palabras);
+    herramientas::utiles::FuncionesSistemaArchivos::leer("bolsas_de_palabras_2clases.txt", bolsas_de_palabras);
     
     std::vector<std::string> bolsas_de_palabras_con_polaridad = herramientas::utiles::FuncionesString::separar(bolsas_de_palabras, "\n");
 
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar("vocabulario_curado.txt");
+    vocabulario.importar("vocabulario_curado_3k.txt");
 
     std::vector<std::pair<std::vector<unsigned int>, std::string>> vectores;
     unsigned int i = 0;
@@ -111,7 +111,7 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
 
     }
 
-    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_2clases.csv", contenido_vectores);
+    herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab3k_2clases.csv", contenido_vectores);
 }
 
 TEST(clasificacion_de_texto, DISABLED_clasificar_dataset)
@@ -154,7 +154,7 @@ TEST(clasificacion_de_texto, guardar_y_cargar_clasificador)
 
     //std::vector<std::string> config_test = herramientas::utiles::FuncionesString::separar(contenido, "\n");
 
-    std::string path_dataset = "dataset/creditcard_equilibrado_mezclado.csv";
+    std::string path_dataset = "dataset/dataset_vocab3k_2clases.csv";
     //std::string path_dataset = config_test[0];
 
     std::cout << "cargando " + path_dataset + "." << std::endl;
@@ -193,11 +193,18 @@ TEST(clasificacion_de_texto, guardar_y_cargar_clasificador)
 
     std::string texto_a_predecir = "gracias!!! esto es muy bueno.";
 
+    std::cout << "texto a predecir: " << texto_a_predecir << std::endl;
+
+    std::string path_vocab = "vocabulario_curado_3k.txt";
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar("vocabulario_curado_1k.txt");
+    vocabulario.importar(path_vocab);
+
+    std::cout << "vocabulario importado: " << path_vocab << std::endl;
 
     std::vector<std::string> bolsa_de_palabras_a_predecir;
     vocabulario.depurar(texto_a_predecir, bolsa_de_palabras_a_predecir);
+
+    std::cout << "termino depuracion." << std::endl;
 
     std::vector<unsigned int> atributos_a_predecir;
     vocabulario.vectorizar(bolsa_de_palabras_a_predecir, atributos_a_predecir);
@@ -205,6 +212,8 @@ TEST(clasificacion_de_texto, guardar_y_cargar_clasificador)
     std::vector<float> atributos_float_a_predecir;
 
     std::for_each(atributos_a_predecir.begin(), atributos_a_predecir.end(), [&atributos_float_a_predecir](unsigned int atributo) { atributos_float_a_predecir.push_back(atributo); });
+
+    std::cout << "termino vectorizacion." << std::endl;
 
     std::string clase;
     clasificador_nuevo.predecir(atributos_float_a_predecir, clase);
