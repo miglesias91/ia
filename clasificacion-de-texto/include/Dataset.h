@@ -42,6 +42,8 @@ public:
     unsigned long int getTamanioValores();
     unsigned long int getTamanioClases();
 
+    void getMapeoClases(std::unordered_map<tiny_dnn::label_t, std::string> & mapa_id_clase);
+
     unsigned long int getValoresDeEntradaEntrenamiento(std::vector<tiny_dnn::vec_t> * valores_de_entrada_entrenamiento);
     unsigned long int getSalidaDeseadaEntrenamiento(std::vector<tiny_dnn::label_t> * salida_deseada_entrenamiento);
 
@@ -77,7 +79,7 @@ private:
     // ATRIBUTOS
 
     tiny_dnn::label_t contador_ids;
-    //std::unordered_map<std::string, tiny_dnn::label_t> mapa_clase_id;
+
     std::unordered_map<std::string, info_clase> mapa_clase_id;
     
     std::vector<data> set_entrenamiento;

@@ -31,6 +31,8 @@ public:
 
     struct config_entrenamiento
     {
+        config_entrenamiento() {};
+
         config_entrenamiento(std::string path)
         {
             std::string contenido;
@@ -42,15 +44,13 @@ public:
             this->numero_de_ciclos = std::stoul(valores[2]);
         }
 
-        std::string funcion_loss;
         std::string optimizador;
-        float tasa_de_aprendizaje;
-        float termino_decay;
         unsigned long int tamanio_batch;
         unsigned long int numero_de_ciclos;
     };
 
-    Clasificador(Dataset * dataset);
+    // EL DATASET TIENE QUE ESTAR PREVIAMENTE CARGADO Y PREPARADO. EL CLASIFICADOR NO LO MODIFICA.
+    Clasificador(Dataset * dataset = nullptr);
     virtual ~Clasificador();
 
     // GETTERS
@@ -62,6 +62,12 @@ public:
     bool entrenar(config_entrenamiento configuracion);
 
     void evaluar();
+
+    void predecir(const std::vector<float> & valores, std::string & clase);
+
+    bool guardar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases);
+
+    bool cargar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases);
 
     // CONSULTAS
 
@@ -78,6 +84,7 @@ private:
     config_red_neuronal config_rn;
 
     Dataset * dataset;
+    std::unordered_map<tiny_dnn::label_t, std::string> mapeo_id_clase;
 };
 
 };

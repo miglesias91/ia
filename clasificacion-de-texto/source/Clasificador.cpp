@@ -4,6 +4,11 @@ using namespace ia::clasificacion;
 
 Clasificador::Clasificador(Dataset * dataset) : dataset(dataset)
 {
+    if (nullptr == dataset)
+    {
+        return;
+    }
+
     this->red_neuronal = tiny_dnn::make_mlp<tiny_dnn::activation::tanh>(
     {
         dataset->getTamanioValores(),
@@ -15,6 +20,8 @@ Clasificador::Clasificador(Dataset * dataset) : dataset(dataset)
 
     this->config_rn.tamanio_capa_entrada = dataset->getTamanioValores();
     this->config_rn.tamanio_capa_salida = dataset->getTamanioClases();
+
+    dataset->getMapeoClases(this->mapeo_id_clase);
 }
 
 Clasificador::~Clasificador()
@@ -85,6 +92,72 @@ void Clasificador::evaluar()
     }
 
     resultado.print_detail(std::cout);
+}
+
+void Clasificador::predecir(const std::vector<float>& valores, std::string & clase)
+{
+    tiny_dnn::vec_t valores_tinydnn;
+
+    std::for_each(valores.begin(), valores.end(), [&valores_tinydnn](float valor) { valores_tinydnn.push_back(valor); });
+
+    tiny_dnn::label_t etiqueta = this->red_neuronal.predict_label(valores_tinydnn);
+}
+
+
+bool Clasificador::guardar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases)
+{
+    std::ofstream archivo_red_neuronal(path_red_neuronal);
+
+    if (false == archivo_red_neuronal.good())
+    {
+        return false;
+    }
+
+    this->red_neuronal.save(archivo_red_neuronal);
+
+    std::ofstream archivo_mapa_clases(path_mapeo_clases);
+
+    if (false == archivo_mapa_clases.good())
+    {
+        return false;
+    }
+
+    std::unordered_map<tiny_dnn::label_t, std::string> mapeo_id_clase;
+    this->dataset->getMapeoClases(mapeo_id_clase);
+
+    for (auto & mapeo : this->mapeo_id_clase)
+    {
+        archivo_mapa_clases << mapeo.first << "," << mapeo.second << std::endl;
+    }
+
+    return true;
+}
+
+bool Clasificador::cargar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases)
+{
+    std::ifstream archivo_red_neuronal(path_red_neuronal);
+
+    if (false == archivo_red_neuronal.good()) {
+        return false;
+    }
+
+    this->red_neuronal.load(archivo_red_neuronal);
+
+    std::string contenido_archivo_mapeo;
+    herramientas::utiles::FuncionesSistemaArchivos::leer(path_mapeo_clases, contenido_archivo_mapeo);
+
+    std::vector<std::string> mapeos = herramientas::utiles::FuncionesString::separar(contenido_archivo_mapeo, "\n");
+    for (auto & id_y_nombre : mapeos)
+    {
+        std::vector<std::string> id_nombre = herramientas::utiles::FuncionesString::separar(id_y_nombre, ",");
+
+        tiny_dnn::label_t id = std::stof(id_nombre[0]);
+        std::string nombre_clase = id_nombre[1];
+
+        this->mapeo_id_clase.insert(std::make_pair(id, nombre_clase));
+    }
+
+    return true;
 }
 
 tiny_dnn::optimizer * Clasificador::crearOptimizador(const config_entrenamiento & configuracion)

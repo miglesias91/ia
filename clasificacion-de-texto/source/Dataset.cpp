@@ -52,6 +52,17 @@ unsigned long int Dataset::getTamanioClases()
     return this->contador_ids;
 }
 
+void Dataset::getMapeoClases(std::unordered_map<tiny_dnn::label_t, std::string> & mapa_id_clase)
+{
+    for (auto & mapeo : this->mapa_clase_id)
+    {
+        std::string nombre_clase = mapeo.first;
+        tiny_dnn::label_t id_clase = mapeo.second.id_clase;
+
+        mapa_id_clase.insert(std::make_pair(id_clase, nombre_clase));
+    }
+}
+
 unsigned long int Dataset::getValoresDeEntradaEntrenamiento(std::vector<tiny_dnn::vec_t> * valores_de_entrada_entrenamiento)
 {
     for (auto data : this->set_entrenamiento)

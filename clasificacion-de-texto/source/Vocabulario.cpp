@@ -10,11 +10,11 @@
 
 using namespace ia::clasificacion;
 
-Vocabulario::Vocabulario() : cantidad_minima_de_apariciones(0), aplicar_stemming(false)
+Vocabulario::Vocabulario() : cantidad_minima_de_apariciones(0), aplicar_stemming(true)
 {
 }
 
-Vocabulario::Vocabulario(const config & configuracion) : cantidad_minima_de_apariciones(0), aplicar_stemming(false)
+Vocabulario::Vocabulario(const config & configuracion) : cantidad_minima_de_apariciones(0), aplicar_stemming(true)
 {
     this->cantidad_minima_de_apariciones = configuracion.cantidad_minima_de_apariciones;
 
