@@ -114,7 +114,7 @@ TEST(clasificacion_de_texto, DISABLED_bolsas_de_palabras_2_vector_vocabulario)
     herramientas::utiles::FuncionesSistemaArchivos::escribir("dataset_vocab3k_2clases.csv", contenido_vectores);
 }
 
-TEST(clasificacion_de_texto, DISABLED_clasificar_dataset)
+TEST(clasificacion_de_texto, DISABLED_clasificar_dataset_y_guardar_red)
 {
     std::string contenido;
     herramientas::utiles::FuncionesSistemaArchivos::leer("config_test.txt", contenido);
@@ -145,78 +145,56 @@ TEST(clasificacion_de_texto, DISABLED_clasificar_dataset)
     clasificador.evaluar();
 
     std::cout << "termino evaluacion." << std::endl;
+
+    clasificador.guardar(config_test[2], config_test[3]);
+
+    delete dataset;
 }
 
-TEST(clasificacion_de_texto, guardar_y_cargar_clasificador)
+TEST(clasificacion_de_texto, cargar_clasificador_y_predecir)
 {
-    //std::string contenido;
-    //herramientas::utiles::FuncionesSistemaArchivos::leer("config_test.txt", contenido);
+    // levanto clasificador 3 clases
+    std::string contenido_config_clasificador;
+    herramientas::utiles::FuncionesSistemaArchivos::leer("config_clasificador_3clases.txt", contenido_config_clasificador);
+    std::vector<std::string> config_clasificador = herramientas::utiles::FuncionesString::separar(contenido_config_clasificador, "\n");
 
-    //std::vector<std::string> config_test = herramientas::utiles::FuncionesString::separar(contenido, "\n");
+    ia::clasificacion::Clasificador clasificador_tres_clases;
+    clasificador_tres_clases.cargar(config_clasificador[0], config_clasificador[1]);
 
-    std::string path_dataset = "dataset/dataset_vocab3k_2clases.csv";
-    //std::string path_dataset = config_test[0];
+    // levanto clasificador 2 clases
+    contenido_config_clasificador;
+    herramientas::utiles::FuncionesSistemaArchivos::leer("config_clasificador_2clases.txt", contenido_config_clasificador);
+    config_clasificador = herramientas::utiles::FuncionesString::separar(contenido_config_clasificador, "\n");
 
-    std::cout << "cargando " + path_dataset + "." << std::endl;
+    ia::clasificacion::Clasificador clasificador_dos_clases;
+    clasificador_dos_clases.cargar(config_clasificador[0], config_clasificador[1]);
 
-    //ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset("creditcard_equilibrado_mezclado.csv");
-    ia::clasificacion::Dataset * dataset = new ia::clasificacion::Dataset(path_dataset);
-
-    std::cout << "termino carga." << std::endl;
-
-    dataset->preparar(); // igualar la cantidad de registros por clase + ordenar aleatoriamente.
-
-    std::cout << "termino preparacion." << std::endl;
-
-    ia::clasificacion::Clasificador::config_entrenamiento config;
-    config.optimizador = "gradient_0.01_0.001";
-    config.tamanio_batch = 1;
-    config.numero_de_ciclos = 5;
-
-    ia::clasificacion::Clasificador clasificador(dataset);
-
-    clasificador.entrenar(config);
-
-    std::cout << "termino entrenamiento." << std::endl;
-
-    clasificador.evaluar();
-
-    std::cout << "termino evaluacion." << std::endl;
-
-    clasificador.guardar("rrnn_clasificador.net", "mapeo_ids_clases.csv");
-
-    // LEVANTO LO QUE GUARDE RECIEN.
-
-    ia::clasificacion::Clasificador clasificador_nuevo;
-
-    clasificador_nuevo.cargar("rrnn_clasificador.net", "mapeo_ids_clases.csv");
-
-    std::string texto_a_predecir = "gracias!!! esto es muy bueno.";
-
-    std::cout << "texto a predecir: " << texto_a_predecir << std::endl;
-
-    std::string path_vocab = "vocabulario_curado_3k.txt";
+    // levanto vocabulario (es el mismo para los dos)
     ia::clasificacion::Vocabulario vocabulario;
-    vocabulario.importar(path_vocab);
+    vocabulario.importar(config_clasificador[2]);
 
-    std::cout << "vocabulario importado: " << path_vocab << std::endl;
+    std::string contenido_a_predecir;
+    herramientas::utiles::FuncionesSistemaArchivos::leer("oraciones_a_predecir.txt", contenido_a_predecir);
+    std::vector<std::string> oraciones = herramientas::utiles::FuncionesString::separar(contenido_a_predecir, "\n");
 
     std::vector<std::string> bolsa_de_palabras_a_predecir;
-    vocabulario.depurar(texto_a_predecir, bolsa_de_palabras_a_predecir);
-
-    std::cout << "termino depuracion." << std::endl;
 
     std::vector<unsigned int> atributos_a_predecir;
-    vocabulario.vectorizar(bolsa_de_palabras_a_predecir, atributos_a_predecir);
-
     std::vector<float> atributos_float_a_predecir;
-
-    std::for_each(atributos_a_predecir.begin(), atributos_a_predecir.end(), [&atributos_float_a_predecir](unsigned int atributo) { atributos_float_a_predecir.push_back(atributo); });
-
-    std::cout << "termino vectorizacion." << std::endl;
-
     std::string clase;
-    clasificador_nuevo.predecir(atributos_float_a_predecir, clase);
+    for(auto & oracion : oraciones)
+    {
+        vocabulario.depurar(oracion, bolsa_de_palabras_a_predecir);
+        vocabulario.vectorizar(bolsa_de_palabras_a_predecir, atributos_a_predecir);
 
-    std::cout << "prediccion: " << clase << std::endl;
+        atributos_float_a_predecir.clear();
+        std::for_each(atributos_a_predecir.begin(), atributos_a_predecir.end(), [&atributos_float_a_predecir](unsigned int atributo) { atributos_float_a_predecir.push_back(atributo); });
+        
+        clase = "";
+        clasificador_tres_clases.predecir(atributos_float_a_predecir, clase);
+        std::cout << "prediccion 3 clases: '" << oracion << "' es " << clase << "." << std::endl;
+
+        clasificador_dos_clases.predecir(atributos_float_a_predecir, clase);
+        std::cout << "prediccion 2 clases: '" << oracion << "' es " << clase << "." << std::endl;
+    }
 }

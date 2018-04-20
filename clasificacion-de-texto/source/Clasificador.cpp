@@ -58,11 +58,7 @@ bool Clasificador::entrenar(config_entrenamiento configuracion)
 
             tiny_dnn::result resultado = this->red_neuronal.test(entrada_evaluacion, salida_deseada_evaluacion);
 
-            std::cout << "iteracion: " << i << " - ";
-
             resultado.print_detail(std::cout);
-
-            i++;
         });
     }
     catch (const tiny_dnn::nn_error & e)
@@ -99,7 +95,7 @@ void Clasificador::predecir(const std::vector<float>& valores, std::string & cla
     tiny_dnn::vec_t valores_tinydnn;
 
     std::for_each(valores.begin(), valores.end(), [&valores_tinydnn](float valor) { valores_tinydnn.push_back(valor); });
-
+    
     tiny_dnn::label_t etiqueta;
     try
     {
@@ -109,20 +105,14 @@ void Clasificador::predecir(const std::vector<float>& valores, std::string & cla
     {
         std::cout << e.what();
     }
+
     clase = this->mapeo_id_clase[etiqueta];
 }
 
 
 bool Clasificador::guardar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases)
 {
-    std::ofstream archivo_red_neuronal(path_red_neuronal);
-
-    if (false == archivo_red_neuronal.good())
-    {
-        return false;
-    }
-
-    this->red_neuronal.save(archivo_red_neuronal);
+    this->red_neuronal.save(path_red_neuronal, tiny_dnn::content_type::weights_and_model, tiny_dnn::file_format::binary);
 
     std::ofstream archivo_mapa_clases(path_mapeo_clases);
 
@@ -144,13 +134,7 @@ bool Clasificador::guardar(const std::string & path_red_neuronal, const std::str
 
 bool Clasificador::cargar(const std::string & path_red_neuronal, const std::string & path_mapeo_clases)
 {
-    std::ifstream archivo_red_neuronal(path_red_neuronal);
-
-    if (false == archivo_red_neuronal.good()) {
-        return false;
-    }
-
-    this->red_neuronal.load(archivo_red_neuronal);
+    this->red_neuronal.load(path_red_neuronal, tiny_dnn::content_type::weights_and_model, tiny_dnn::file_format::binary);
 
     std::string contenido_archivo_mapeo;
     herramientas::utiles::FuncionesSistemaArchivos::leer(path_mapeo_clases, contenido_archivo_mapeo);
