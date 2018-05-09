@@ -1,9 +1,15 @@
 #include <clasificacion-de-texto/include/Clasificador.h>
 
+// rapidjson -> incluyo al rapidjson para que reemplace la version vieja que tiene el tiny-dnn.
+#include <rapidjson/document.h>
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/prettywriter.h>
+
 using namespace ia::clasificacion;
 
 Clasificador::Clasificador(Dataset * dataset) : dataset(dataset)
 {
+    rapidjson::Document solo_para_incluir_las_librerias;
     if (nullptr == dataset)
     {
         return;
