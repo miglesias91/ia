@@ -76,8 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CEREAL_ARCHIVES_JSON_HPP_;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos)rapidjson\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <EnableModules>false</EnableModules>
     </ClCompile>
@@ -110,8 +110,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CEREAL_ARCHIVES_JSON_HPP_;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos)rapidjson\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <EnableModules>false</EnableModules>
     </ClCompile>
@@ -130,8 +130,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CEREAL_ARCHIVES_JSON_HPP_;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(repos)tiny-dnn;$(repos)oleander-stemming-lib;$(repos)googletest\googletest\include;$(repos)rapidjson\include;$(repos-git)scraping;$(repos-git)herramientas_desarrollo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <EnableModules>false</EnableModules>
     </ClCompile>
