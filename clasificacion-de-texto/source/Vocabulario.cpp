@@ -95,7 +95,7 @@ unsigned int Vocabulario::vectorizar(const std::vector<std::string> & bolsa_de_p
     for (std::string palabra : bolsa_de_palabras)
     {
         std::vector<std::string>::iterator it_palabra = std::lower_bound(this->vocabulario_palabras.begin(), this->vocabulario_palabras.end(), palabra);
-        if (palabra == *it_palabra)
+        if (it_palabra != this->vocabulario_palabras.end() && palabra == *it_palabra)
         {// si entra aca, entonces encontro la palabra en el vocabulario.
             unsigned long long int posicion_palabra_en_vector = std::distance(this->vocabulario_palabras.begin(), it_palabra);
 
