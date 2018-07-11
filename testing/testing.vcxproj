@@ -83,7 +83,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Debug;$(repos)googletest\googletest\build_x86\Debug;$(repos-git)scraping\Debug;$(repos-git)herramientas_desarrollo\Debug;$(repos-git)almacenamiento\Debug;$(repos-git)medios-digitales\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>clasificacion-de-texto.lib;scraping.lib;depuracion.lib;extraccion.lib;twitter.lib;facebook.lib;noticias.lib;feed.lib;utiles.lib;log.lib;almacenamiento.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>clasificacion-de-texto.lib;scraping.lib;extraccion.lib;depuracion.lib;twitter.lib;facebook.lib;noticias.lib;feed.lib;utiles.lib;log.lib;almacenamiento.lib;WrapperRocksDB.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
