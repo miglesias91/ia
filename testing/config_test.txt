@@ -1,0 +1,4 @@
+dataset/dataset_vocab3k_3clases.csv
+config_red.txt
+clasificador_vocab3k_3clases.net
+mapa_ids_3clases.csv

@@ -1,0 +1,3 @@
+clasificador_vocab3k_3clases.net
+mapa_ids_3clases.csv
+vocabulario_curado_3k.txt
